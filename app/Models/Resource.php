@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resource extends Model
@@ -18,4 +19,14 @@ class Resource extends Model
 		'alias',
 		'type'
 	];
+
+	/**
+	 * Get the authorization that owns the Resource
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function authorization(): BelongsTo
+	{
+		return $this->belongsTo(related: Authorization::class);
+	}
 }
