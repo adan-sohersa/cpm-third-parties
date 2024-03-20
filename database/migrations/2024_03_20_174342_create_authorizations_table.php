@@ -13,7 +13,7 @@ return new class extends Migration
 	public function up(): void
 	{
 		Schema::create('authorizations', function (Blueprint $table) {
-			$table->uuid('id');
+			$table->uuid('id')->primary();
 			$table->enum('provider', array_column(ThirdPartyProviders::cases(), 'value'));
 			$table->string('access_token');
 			$table->string('refresh_token');
@@ -22,6 +22,7 @@ return new class extends Migration
 			$table->string('authorizable_class', 50);
 			$table->string('authorizable_id', 50);
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
