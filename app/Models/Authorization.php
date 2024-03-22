@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Authorization extends Model
 {
+	use HasUuids;
 	use HasFactory;
 	use SoftDeletes;
 
@@ -16,7 +18,31 @@ class Authorization extends Model
 		'provider',
 		'access_token',
 		'refresh_token',
+		'scopes',
 		'expires_at',
+		'username_at_provider',
+		'user_picture',
+		'authorizable_class',
+		'authorizable_id'
+	];
+
+	protected $hidden = [
+		'refresh_token',
+		'expires_at',
+		'authorizable_class',
+		'authorizable_id'
+	];
+	
+	const HIDDEN_KEYS = [
+		'refresh_token',
+		'expires_at',
+		'authorizable_class',
+		'authorizable_id'
+	];
+
+	const UNIQUE_KEYS = [
+		'provider',
+		'scopes',
 		'username_at_provider',
 		'authorizable_class',
 		'authorizable_id'

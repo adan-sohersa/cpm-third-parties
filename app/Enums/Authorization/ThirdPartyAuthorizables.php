@@ -4,5 +4,6 @@ namespace App\Enums\Authorization;
 
 enum ThirdPartyAuthorizables: string
 {
-	case projects = 'projects';
+	case PROJECT = 'projects';
+	case USER = 'users';
 }
