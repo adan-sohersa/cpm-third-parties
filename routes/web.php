@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Authorization\AutodeskAuthorizationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('welcome');
 });
+
+Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])->name(name: 'authorizations.aps.callback');
