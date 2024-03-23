@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authorization\AutodeskAuthorizationController;
+use App\Livewire\Authorizations\AuthorizationsPage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,5 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
 	return view('welcome');
 });
+
+Route::get(uri: '/authorizations', action: AuthorizationsPage::class)->name('authorizations.all');
 
 Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])->name(name: 'authorizations.aps.callback');
