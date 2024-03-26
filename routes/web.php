@@ -19,6 +19,13 @@ Route::get('/', function () {
 	return view('welcome');
 });
 
-Route::get(uri: '/authorizations', action: AuthorizationsPage::class)->name('authorizations.all');
+Route::name('authorizations.')
+	->group(function () {
 
-Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])->name(name: 'authorizations.aps.callback');
+		Route::get(uri: '/authorizations', action: AuthorizationsPage::class)
+			->name('all');
+
+		Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])
+			->name(name: 'aps.callback');
+	})
+	->middleware(['authenticator.session']);
