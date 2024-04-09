@@ -2,9 +2,11 @@
 
 namespace App\Enums\Authorization;
 
+use App\Enums\EnumToArray;
 
 enum ThirdPartyAuthorizables: string
 {
+	use EnumToArray;
 
 	case PROJECT = 'projects';
 	case USER = 'users';
@@ -12,6 +14,7 @@ enum ThirdPartyAuthorizables: string
 
 enum AuthorizableConnection: string
 {
+	use EnumToArray;
 
 	case projects = 'projects_app_db';
 
@@ -20,6 +23,7 @@ enum AuthorizableConnection: string
 
 enum AuthorizableIdentifier: string 
 {
+	use EnumToArray;
 
 	case projects = 'id';
 }
