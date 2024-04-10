@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Authorization\AuthorizationController;
+use App\Http\Controllers\Authorization\AutodeskAuthorizationController;
+// use App\Http\Controllers\ProfileController;
+// use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+// use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,17 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::name('authorizations.')
+	->middleware(['authenticator.session'])
+	->group(function () {
+
+		Route::get(uri: '/authorizations', action: [AuthorizationController::class, 'all'])
+			->name('all');
+
+		Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])
+			->name(name: 'aps.callback');
+	});
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [

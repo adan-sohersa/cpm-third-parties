@@ -1,4 +1,5 @@
 import { Config } from 'ziggy-js';
+export * from './models'
 
 export interface User {
     id: number;
