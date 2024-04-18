@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('authorizations.')
-	//->middleware(['authenticator.session'])
+	->middleware(['authenticator.session'])
 	->group(function () {
 
 		Route::get(uri: '/authorizations', action: [AuthorizationController::class, 'all'])
