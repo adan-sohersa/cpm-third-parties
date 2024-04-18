@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Authorization;
 
 use App\Enums\Authorization\AuthorizableConnection;
@@ -16,6 +15,13 @@ use Inertia\Inertia;
 
 class AuthorizationController extends Controller
 {
+	# Pasando la base de datos de 'projects-wt-next' para su verificacion, en teoria
+	public function showProyectos()
+    {
+        $proyectos = DB::table('projects-wt-next')->get();
+        return view('authorizations-page', compact('proyectos'));
+    }
+
 	/**
 	 * Display a listing of the resource.
 	 */
@@ -128,7 +134,7 @@ class AuthorizationController extends Controller
 			return $signaturesValidator->errors();
 		}
 
-		return;
+	//	return;
 
 		$existenceValidator = Validator::make(
 			data: $request->all(),
