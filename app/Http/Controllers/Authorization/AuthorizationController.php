@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class AuthorizationController extends Controller
 {
 	# Pasando la base de datos de 'projects-wt-next' para su verificacion, en teoria
-	public function showProyectos()
+	public function verifyProjects()
     {
-        $proyectos = DB::table('projects-wt-next')->get();
+			  $proyectos = DB::table('projects-wt-next')->get();
         return view('authorizations-page', compact('proyectos'));
     }
 
@@ -35,6 +36,10 @@ class AuthorizationController extends Controller
 
 	public function all(Request $request)
 	{
+
+		$testResults = DB::select('SELECT 1');
+
+		$projects = DB::table('projects')->get();
 		// REQUEST VALIDATION
 		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
 			return response()->json(data: $requestErrors, status: 422);
@@ -56,7 +61,8 @@ class AuthorizationController extends Controller
 			'type' => $authorizableCase->value,
 			'authorizable' => $request->authorizable,
 			'user' => Auth::guard(name: 'authenticator')->user(),
-			'apsAuthorizationUrl' => $apsAuthorizationUrl
+			'apsAuthorizationUrl' => $apsAuthorizationUrl,
+			'project' => $projects,
 		]);
 	}
 

@@ -93,13 +93,13 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
-				'projects-wt-next' => [
-					'driver' => 'pgsql',
-					'host' => env('DB_HOST', 'bk7jdflvnanatauph2qe-postgresql.services.clever-cloud.com'),
-					'port' => env('DB_PORT', '50013'),
-					'database' => env('DB_DATABASE', 'bk7jdflvnanatauph2qe'),
-					'username' => env('DB_USERNAME', 'u3hcaxvcroiefkh8fitb'),
-					'password' => env('DB_PASSWORD', 'sWFCfDxgwvomUlyuAimQgM1NQ7lOnZ'),
+				'Db' => [
+					'driver' => 'mysql',
+					'host' => 'DB_HOST', 'bvbecjjkivjrmvfqv4xo-mysql.services.clever-cloud.com',
+					'port' => 'DB_PORT', '3306',
+					'database' => 'DB_DATABASE', 'bvbecjjkivjrmvfqv4xo',
+					'username' => 'DB_USERNAME', 'uivhpr4zljawmiuz',
+					'password' => 'DB_PASSWORD', '59EVQBSG1QwuWCeytOtS',
 				],
 
     ],
