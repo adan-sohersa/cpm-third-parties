@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Authorization;
 
 use App\Enums\Authorization\AuthorizableConnection;
 use App\Enums\Authorization\AuthorizableIdentifier;
+use App\Enums\Authorization\AuthorizableTable;
 use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Http\Controllers\Controller;
 use App\Models\Authorization;
@@ -37,9 +38,6 @@ class AuthorizationController extends Controller
 	public function all(Request $request)
 	{
 
-		$testResults = DB::select('SELECT 1');
-
-		$projects = DB::table('projects')->get();
 		// REQUEST VALIDATION
 		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
 			return response()->json(data: $requestErrors, status: 422);
@@ -62,7 +60,6 @@ class AuthorizationController extends Controller
 			'authorizable' => $request->authorizable,
 			'user' => Auth::guard(name: 'authenticator')->user(),
 			'apsAuthorizationUrl' => $apsAuthorizationUrl,
-			'project' => $projects,
 		]);
 	}
 
@@ -146,7 +143,7 @@ class AuthorizationController extends Controller
 			data: $request->all(),
 			rules: [
 				'authorizable' => Rule::exists(
-					table: AuthorizableConnection::fromName(name: $request->type),
+					table: AuthorizableConnection::fromName(name: $request->type) . "." . AuthorizableTable::fromName(name: $request->type),
 					column: AuthorizableIdentifier::fromName(name: $request->type)
 				)
 			]

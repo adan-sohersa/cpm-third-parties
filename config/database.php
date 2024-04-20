@@ -93,13 +93,13 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
-				'Db' => [
-					'driver' => 'mysql',
-					'host' => 'DB_HOST', 'bvbecjjkivjrmvfqv4xo-mysql.services.clever-cloud.com',
-					'port' => 'DB_PORT', '3306',
-					'database' => 'DB_DATABASE', 'bvbecjjkivjrmvfqv4xo',
-					'username' => 'DB_USERNAME', 'uivhpr4zljawmiuz',
-					'password' => 'DB_PASSWORD', '59EVQBSG1QwuWCeytOtS',
+				'projects_app_db' => [
+					'driver' => env('PROJECTS_DB_CONNECTION'),
+					'host' => env('PROJECTS_DB_HOST'),
+					'port' => env('PROJECTS_DB_PORT'),
+					'database' => env('PROJECTS_DB_DATABASE'),
+					'username' => env('PROJECTS_DB_USERNAME'),
+					'password' => env('PROJECTS_DB_PASSWORD'),
 				],
 
     ],
