@@ -34,8 +34,8 @@ class RefreshToken extends Command
 			//y refresh_token, que son necesarios para autenticarse en la api de autodesk pero realmente
 			//no sé si siempre sean necesarios puesto que en teoría ya estaba iniciada la sesión
 				 $response = Http::post('https://developer.api.autodesk.com/authentication/v2/token', [
-						 'client_id' => 'client_id', // Debo poner el client_id real de los tokens, osea no solo es uno
-						 'client_secret' => 'client_secret', // Al igual que client_id, no deben estar 'hardcodeados'
+						 'client_id' => env('CLIENT_ID'),
+						 'client_secret' => env('CLIENT_SECRET'),
 						 'grant_type' => 'refresh_token',
 						 'refresh_token' => $refreshToken,
 				 ]);
@@ -62,11 +62,6 @@ class RefreshToken extends Command
 				$this->info('Sin tokens para actualizar');
 				return;
 			}
-			
-			// foreach($expiredTokens as $authorization){
-			// 	$authorization->expires_at = Carbon::parse($newTokenResponse['expires_at']);
-			// }
-			// $this->info('Expires At: ' . $authorization->expires_at);
 			$tokens = Authorization::all();
 			foreach($tokens as $token){
 				$accesToken = $token->acces_token;
