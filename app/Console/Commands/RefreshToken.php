@@ -34,8 +34,8 @@ class RefreshToken extends Command
 			//y refresh_token, que son necesarios para autenticarse en la api de autodesk pero realmente
 			//no sé si siempre sean necesarios puesto que en teoría ya estaba iniciada la sesión
 				 $response = Http::post('https://developer.api.autodesk.com/authentication/v2/token', [
-						 'client_id' => env('CLIENT_ID'),
-						 'client_secret' => env('CLIENT_SECRET'),
+						 'client_id' => env('APS_CLIENT_ID'),
+						 'client_secret' => env('APS_CLIENT_SECRET'),
 						 'grant_type' => 'refresh_token',
 						 'refresh_token' => $refreshToken,
 				 ]);
