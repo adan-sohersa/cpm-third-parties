@@ -30,7 +30,6 @@ class RefreshToken extends Command
 			$this->info("El token fue reasignado conexito, el nuevo token es: $newAccessToken");
 		} else {
 			$this->error('No se logro la communicacion, response: ' . json_encode($response->json()));
-			return 'Hola';
 		}
 	}
 
@@ -44,7 +43,7 @@ class RefreshToken extends Command
 			if ($expiresAt->isPast()) {
 				echo 'La fecha de expiracion ya ha pasado';
 				$newAccessToken = $this->getNewAccessToken($refreshToken);
-				$this->info('El nuevo token asignado es: ' . $newAccessToken);
+				$this->info($newAccessToken);
 			} else {
 				$nextHour = Carbon::now()->addHour();
 				if ($expiresAt->isBefore($nextHour)) {
