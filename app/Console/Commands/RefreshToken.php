@@ -25,8 +25,16 @@ class RefreshToken extends Command
 			'Content-Type' => 'application/x-www-form-urlencoded'
 		])->asForm()->post('https://developer.api.autodesk.com/authentication/v2/token', $body);
 		if ($response->successful()) {
+			$authorization = Authorization::where('refresh_token', $refreshToken)->first();
 			$data = $response->json();
 			$newAccessToken = $data['access_token'];
+			if ($authorization) {
+				$authorization->access_token = $newAccessToken;
+				$authorization->save();
+				$this->info("Token actualizado correctamente en la base de datos.");
+		}else {
+			$this->error("No se encontró el registro de autorización correspondiente.");
+	} 
 			$this->info("El token fue reasignado conexito, el nuevo token es: $newAccessToken");
 		} else {
 			$this->error('No se logro la communicacion, response: ' . json_encode($response->json()));
