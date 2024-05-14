@@ -17,12 +17,6 @@ use Illuminate\Support\Facades\DB;
 
 class AuthorizationController extends Controller
 {
-	# Pasando la base de datos de 'projects-wt-next' para su verificacion, en teoria
-	public function verifyProjects()
-    {
-			  $proyectos = DB::table('projects-wt-next')->get();
-        return view('authorizations-page', compact('proyectos'));
-    }
 
 	/**
 	 * Display a listing of the resource.

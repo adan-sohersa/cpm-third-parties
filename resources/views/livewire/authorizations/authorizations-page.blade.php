@@ -11,7 +11,6 @@
 					<button type="button" wire:click="deleteAuthorization('{{ $authorization->id }}')">Eliminar</button>
 				</li>
 		@endforeach
-
 	</ul>
 
 	<a href={{ $apsAuthorizationUrl }}>New Autodesk Authorization</a>
