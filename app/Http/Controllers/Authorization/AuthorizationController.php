@@ -34,23 +34,28 @@ class AuthorizationController extends Controller
 			return response()->json(data: $requestErrors, status: 422);
 		};
 
-		// Resolve type
-		$authorizableCase = ThirdPartyAuthorizables::from(value: $request->type);
+		// Authorizable Case
+		$authorizableCase = isset($request->type)
+			? ThirdPartyAuthorizables::from(value: $request->type)
+			: ThirdPartyAuthorizables::USER;
+
+		// Authorizable Id
+		$authorizableId = $authorizableCase === ThirdPartyAuthorizables::USER
+			? Auth::guard(name: 'authenticator')->user()->id
+			: $request->authorizable;
 
 		// QUERY
 		$authorizations = Authorization::where('authorizable_class', $authorizableCase->value)
-			->where('authorizable_id', $request->authorizable)
+			->where('authorizable_id', $authorizableId)
 			->get();
-
-		$apsAuthorizationUrl = ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $request->authorizable);
 
 		// RESPONSE
 		return Inertia::render('Authorizations/AllAuthorizationsPage', [
 			'authorizations' => $authorizations,
 			'type' => $authorizableCase->value,
-			'authorizable' => $request->authorizable,
+			'authorizable' => $authorizableId,
 			'user' => Auth::guard(name: 'authenticator')->user(),
-			'apsAuthorizationUrl' => $apsAuthorizationUrl
+			'apsAuthorizationUrl' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
 		]);
 	}
 
@@ -114,12 +119,10 @@ class AuthorizationController extends Controller
 			data: $request->all(),
 			rules: [
 				'type' => [
-					Rule::in(ThirdPartyAuthorizables::values()),
-					'required'
+					Rule::in(ThirdPartyAuthorizables::values())
 				],
 				'authorizable' => [
-					'uuid',
-					'required'
+					'uuid'
 				]
 			]
 		);
