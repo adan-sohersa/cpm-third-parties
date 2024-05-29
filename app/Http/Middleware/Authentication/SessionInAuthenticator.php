@@ -5,6 +5,7 @@ namespace App\Http\Middleware\Authentication;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 class SessionInAuthenticator
@@ -31,7 +32,7 @@ class SessionInAuthenticator
 			? '.' . env('MAIN_DOMAIN')
 			: 'localhost';
 
-		$redirectionCookie = cookie(
+		$redirectionCookie = Cookie::create(
 			name: $redirectionCookieName,
 			value: $redirectionBack,
 			domain: $cookieDomain,
