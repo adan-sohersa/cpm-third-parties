@@ -2,38 +2,19 @@
 
 namespace App\Http\Controllers\Authorization;
 
-use App\Enums\Authorization\AuthorizableConnection;
-use App\Enums\Authorization\AuthorizableIdentifier;
 use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Authorization\AllAuthorizationsRequest;
 use App\Models\Authorization;
 use App\Source\AutodeskPlatformServices\ApsAuthentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AuthorizationController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 */
-	public function index(Request $request)
+	public function index(AllAuthorizationsRequest $request)
 	{
-		// REQUEST VALIDATION
-		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
-			return response()->json(data: $requestErrors, status: 422);
-		};
-	}
-
-	public function all(Request $request)
-	{
-		// REQUEST VALIDATION
-		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
-			return response()->json(data: $requestErrors, status: 422);
-		};
-
 		// Authorizable Case
 		$authorizableCase = isset($request->type)
 			? ThirdPartyAuthorizables::from(value: $request->type)
@@ -107,44 +88,4 @@ class AuthorizationController extends Controller
 		//
 	}
 
-	/**
-	 * Validates the params of the request in order to determine if it is usefull for the operation of the controller.
-	 *
-	 * @param Illuminate\Http\Request $request The request to validate.
-	 * @return \Illuminate\Support\MessageBag|null The validator errors in case of.
-	 */
-	public static function validateFiltersInRequest(Request $request)
-	{
-		$signaturesValidator = Validator::make(
-			data: $request->all(),
-			rules: [
-				'type' => [
-					Rule::in(ThirdPartyAuthorizables::values())
-				],
-				'authorizable' => [
-					'uuid'
-				]
-			]
-		);
-
-		if ($signaturesValidator->fails()) {
-			return $signaturesValidator->errors();
-		}
-
-		return;
-
-		$existenceValidator = Validator::make(
-			data: $request->all(),
-			rules: [
-				'authorizable' => Rule::exists(
-					table: AuthorizableConnection::fromName(name: $request->type),
-					column: AuthorizableIdentifier::fromName(name: $request->type)
-				)
-			]
-		);
-
-		if ($existenceValidator->fails()) {
-			return $existenceValidator->errors();
-		}
-	}
 }
