@@ -7,6 +7,7 @@ use App\Source\Authentication\Application\ValidateSession;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,8 @@ class AuthServiceProvider extends ServiceProvider
         Auth::viaRequest('authenticatorDriver', function (Request $request){
 
 					$sessionCookieName = str_replace(search: '.', replace: '_', subject: env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION'));
+
+					Log::debug('Request cookies => ', $request->cookies);
 
 					$sessionCookie = $request->cookie(key: $sessionCookieName);
 
