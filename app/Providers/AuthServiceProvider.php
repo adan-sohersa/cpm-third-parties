@@ -36,9 +36,19 @@ class AuthServiceProvider extends ServiceProvider
 					
 					Log::debug('Request cookies => '. $sessionCookie); // @debug
 
-					return is_null($sessionCookie)
-						? null
-						: ValidateSession::isValidSession(sessionToken: $sessionCookie);
+					if (is_null($sessionCookie)) {
+						return null;
+					}
+
+					$user = ValidateSession::isValidSession(sessionToken: $sessionCookie);
+
+					Log::debug('User => ', $user->toArray()); // @debug
+
+					return $user;
+
+					// return is_null($sessionCookie)
+					// 	? null
+					// 	: ValidateSession::isValidSession(sessionToken: $sessionCookie);
 
 				});
     }
