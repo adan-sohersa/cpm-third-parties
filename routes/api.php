@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Authorization\ApiV1AuthorizationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
+
+/**
+ * @todo Protect the route with the authentication middleware.
+ */
+Route::apiResource(name: 'authorizations', controller: ApiV1AuthorizationController::class);

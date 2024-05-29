@@ -2,8 +2,12 @@
 
 namespace App\Enums\Resource;
 
+use App\Enums\EnumToArray;
+
 enum ResourceTypes: string
 {
+	use EnumToArray;
+
 	/**
 	 * This type should be used to attach some project from ACC to a internal project.
 	 */

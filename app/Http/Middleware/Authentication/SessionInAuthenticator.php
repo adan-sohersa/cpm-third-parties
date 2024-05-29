@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware\Authentication;
 
-use App\Models\User;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 class SessionInAuthenticator
@@ -18,60 +17,11 @@ class SessionInAuthenticator
 	 */
 	public function handle(Request $request, Closure $next): Response
 	{
-
-		$sessionCookieName = str_replace(search: '.', replace: '_', subject: env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION'));
-
-		$sessionCookie = $request->cookie(key: $sessionCookieName);
-
-		if (is_null($sessionCookie)) {
-			return $this->redirectToAuthenticator($request->fullUrl());
+		if (!Auth::guard('authenticator')->check()) {
+			return $this->redirectToAuthenticator(redirectionBack: $request->fullUrl());
 		}
-
-		$user = $this->isValidSession(sessionToken: $sessionCookie);
-
-		if (is_null($user)) {
-			return $this->redirectToAuthenticator($request->fullUrl());
-		}
-
-		$request->session()->put(key: 'user', value: $user);
 
 		return $next($request);
-	}
-
-	private function isValidSession(string $sessionToken = null): \App\Models\User | null
-	{
-		Debugbar::debug($sessionToken);
-
-		$endpoint = env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SESSION_ENDPOINT');
-
-		$response = Http::withCookies(
-			cookies: [
-				env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
-			],
-			domain: '.sohersabim.test'
-		)->get(url: $endpoint);
-
-		if ($response->failed()) {
-			return null;
-		}
-
-		$responseJson = $response->json();
-
-		if (empty($responseJson)) {
-			return null;
-		}
-
-		$authenticatedUser = $responseJson['user'];
-
-		if (is_null($authenticatedUser)) {
-			return null;
-		}
-
-		$user = new User($authenticatedUser);
-		$user->id = $authenticatedUser['id'];
-
-		return $user;
-
 	}
 
 	private function redirectToAuthenticator(string $redirectionBack)
@@ -82,7 +32,7 @@ class SessionInAuthenticator
 			? '.' . env('MAIN_DOMAIN')
 			: 'localhost';
 
-		$redirectionCookie = cookie(
+		$redirectionCookie = Cookie::create(
 			name: $redirectionCookieName,
 			value: $redirectionBack,
 			domain: $cookieDomain,
