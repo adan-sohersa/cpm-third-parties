@@ -16,7 +16,7 @@ class ValidateSession {
 			cookies: [
 				env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
 			],
-			domain: '.sohersabim.test'
+			domain: '.' . env('MAIN_DOMAIN')
 		)->get(url: $endpoint);
 
 		if ($response->failed()) {
