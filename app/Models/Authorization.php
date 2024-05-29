@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
+/**
+ * @todo Implement a dictionary of query params use along the the app in order to map the authorizable_class and the authorizable_id attributes.
+ */
 class Authorization extends Model
 {
 	use HasUuids;

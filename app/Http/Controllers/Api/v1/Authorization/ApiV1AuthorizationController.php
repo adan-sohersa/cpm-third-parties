@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Authorization;
+namespace App\Http\Controllers\Api\v1\Authorization;
 
 use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authorization\AllAuthorizationsRequest;
+use App\Http\Resources\AuthorizationCollection;
+use App\Http\Resources\AuthorizationResource;
 use App\Models\Authorization;
-use App\Source\AutodeskPlatformServices\ApsAuthentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 
-class AuthorizationController extends Controller
+class ApiV1AuthorizationController extends Controller
 {
+	/**
+	 * Display a listing of the resource.
+	 */
 	public function index(AllAuthorizationsRequest $request)
 	{
 		// Authorizable Case
@@ -31,21 +34,7 @@ class AuthorizationController extends Controller
 			->get();
 
 		// RESPONSE
-		return Inertia::render('Authorizations/AllAuthorizationsPage', [
-			'authorizations' => $authorizations,
-			'type' => $authorizableCase->value,
-			'authorizable' => $authorizableId,
-			'user' => Auth::guard(name: 'authenticator')->user(),
-			'apsAuthorizationUrl' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
-		]);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 */
-	public function create()
-	{
-		//
+		return new AuthorizationCollection($authorizations);
 	}
 
 	/**
@@ -61,15 +50,7 @@ class AuthorizationController extends Controller
 	 */
 	public function show(Authorization $authorization)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 */
-	public function edit(Authorization $authorization)
-	{
-		//
+		return new AuthorizationResource($authorization);
 	}
 
 	/**
@@ -87,5 +68,4 @@ class AuthorizationController extends Controller
 	{
 		//
 	}
-
 }

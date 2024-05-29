@@ -22,5 +22,8 @@
         "tailwindcss": "^3.2.1",
         "typescript": "^5.0.2",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "@adan-sohersa/dummy-design-system": "^1.0.8"
     }
 }

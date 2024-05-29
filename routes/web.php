@@ -22,7 +22,7 @@ Route::name('authorizations.')
 	->middleware(['authenticator.session'])
 	->group(function () {
 
-		Route::get(uri: '/authorizations', action: [AuthorizationController::class, 'all'])
+		Route::get(uri: '/authorizations', action: [AuthorizationController::class, 'index'])
 			->name('all');
 
 		Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])
