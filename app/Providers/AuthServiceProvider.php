@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
 					$sessionCookieName = str_replace(search: '.', replace: '_', subject: env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION'));
 
 					// Log::debug('Request cookies => ', $request->cookie()); // @debug
-					Log::debug('Request cookies => ', $request->cookie(key: $sessionCookieName)); // @debug
+					Log::debug('Request cookies => '. $request->cookie(key: $sessionCookieName)); // @debug
 
 					$sessionCookie = $request->cookie(key: $sessionCookieName);
 
