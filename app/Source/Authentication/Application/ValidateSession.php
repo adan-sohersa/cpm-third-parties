@@ -6,23 +6,26 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ValidateSession {
+class ValidateSession
+{
 
 	public static function isValidSession(string $sessionToken = null): \App\Models\User | null
 	{
 
 		$endpoint = env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SESSION_ENDPOINT');
 
-		Log::debug("Endpoint => " . $endpoint);	
+		Log::debug("Endpoint => " . $endpoint);
 
-		$response = Http::withCookies(
-			cookies: [
-				env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
-			],
-			domain: '.' . env('MAIN_DOMAIN')
-			)->get(url: $endpoint);
-			
-			if ($response->failed()) {
+		$response = Http::
+			// withCookies(
+			// 	cookies: [
+			// 		env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
+			// 	],
+			// 	domain: '.' . env('MAIN_DOMAIN')
+			// 	)->
+			get(url: $endpoint);
+
+		if ($response->failed()) {
 			Log::debug("Response failed => " . $response->status() . " " . $response->body()); // @debug	
 			return null;
 		}
@@ -49,7 +52,5 @@ class ValidateSession {
 		$user->id = $authenticatedUser['id'];
 
 		return $user;
-
 	}
-
 }
