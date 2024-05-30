@@ -3,6 +3,7 @@
 namespace App\Source\Authentication\Application;
 
 use App\Models\User;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -14,8 +15,6 @@ class ValidateSession
 
 		$endpoint = env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SESSION_ENDPOINT');
 
-		Log::debug("Endpoint => " . $endpoint);
-
 		$response = Http::
 			// withCookies(
 			// 	cookies: [
@@ -25,27 +24,27 @@ class ValidateSession
 			// 	)->
 			get(url: $endpoint);
 
-		if ($response->failed()) {
-			Log::debug("Response failed => " . $response->status() . " " . $response->body()); // @debug	
-			return null;
-		}
+			Debugbar::info("Response => "); // @debug
+			Debugbar::info($response); // @debug
+			Debugbar::info($response->body()); // @debug
 
-		Log::debug("Response => ", $response->body()); // @debug
+		if ($response->failed()) {
+			return new User();
+		}
 
 		$responseJson = $response->json();
 
-		Log::debug("Response Json => ", $responseJson); // @debug
+		Debugbar::info("Response Json => "); // @debug
+		Debugbar::info($responseJson); // @debug
 
 		if (empty($responseJson)) {
-			return null;
+			return new User();
 		}
 
 		$authenticatedUser = $responseJson['user'];
 
-		Log::debug("Authenticated User => ", $authenticatedUser); // @debug
-
 		if (is_null($authenticatedUser)) {
-			return null;
+			return new User();
 		}
 
 		$user = new User($authenticatedUser);
