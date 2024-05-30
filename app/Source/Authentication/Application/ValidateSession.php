@@ -20,10 +20,10 @@ class ValidateSession {
 				env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
 			],
 			domain: '.' . env('MAIN_DOMAIN')
-		)->get(url: $endpoint);
-
-		if ($response->failed()) {
-			Log::debug("Response failed => " . $response->status(), $response->json()); // @debug
+			)->get(url: $endpoint);
+			
+			if ($response->failed()) {
+			Log::debug("Response failed => " . $response->status() . " " . $response->body()); // @debug	
 			return null;
 		}
 
