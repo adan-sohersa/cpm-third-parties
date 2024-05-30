@@ -5,16 +5,13 @@
 			"src": "/api/index.php",
 			"use": "vercel-php@0.5.4"
 		},
-    {
-      "src": "resources/js",
-      "use": "@vercel/build",
-      "cmd": "npm run build"
-    },
 		{
 			"src": "/public/**",
 			"use": "@vercel/static"
 		}
 	],
+	"buildCommand": "npm run build",
+	"installCommand": "composer install && npm install",
 	"routes": [
 		{
 			"src": "/(css|js|images)/(.*)",
