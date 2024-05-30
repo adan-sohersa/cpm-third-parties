@@ -23,6 +23,7 @@ class ValidateSession {
 		)->get(url: $endpoint);
 
 		if ($response->failed()) {
+			Log::debug("Response failed => " . $response->status(), $response->json()); // @debug
 			return null;
 		}
 
