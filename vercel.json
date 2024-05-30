@@ -1,12 +1,16 @@
 {
 	"version": 2,
-	"functions": {
-		"api/index.php": {
-			"runtime": "vercel-php@0.6.0"
+	"builds": [
+		{
+			"src": "/api/index.php",
+			"use": "vercel-php@0.5.4"
+		},
+		{
+			"src": "/public/**",
+			"use": "@vercel/static"
 		}
-	},
-	"buildCommand": "npm run build",
-	"installCommand": "composer install && npm install",
+	],
+	"installCommand": "npm install && npm run build",
 	"routes": [
 		{
 			"src": "/(css|js|images)/(.*)",
