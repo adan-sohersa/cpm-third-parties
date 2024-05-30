@@ -42,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
 
 					$user = ValidateSession::isValidSession(sessionToken: $sessionCookie);
 
-					Log::debug('User => ', $user->toArray()); // @debug
+					// Log::debug('User => ', $user->toArray()); // @debug
 
 					return $user;
 
