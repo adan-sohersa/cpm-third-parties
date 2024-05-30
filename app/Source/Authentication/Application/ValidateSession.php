@@ -16,12 +16,12 @@ class ValidateSession
 		$endpoint = env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SESSION_ENDPOINT');
 
 		$response = Http::
-			// withCookies(
-			// 	cookies: [
-			// 		env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
-			// 	],
-			// 	domain: '.' . env('MAIN_DOMAIN')
-			// 	)->
+			withCookies(
+				cookies: [
+					env('AUTHENTICATOR_APP_COOKIE_FOR_SESSION') => $sessionToken
+				],
+				domain: '.' . env('MAIN_DOMAIN')
+				)->
 			get(url: $endpoint);
 
 			Debugbar::info("Response => "); // @debug

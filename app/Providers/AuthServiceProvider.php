@@ -4,6 +4,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use App\Source\Authentication\Application\ValidateSession;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,8 @@ class AuthServiceProvider extends ServiceProvider
 					}
 
 					$user = ValidateSession::isValidSession(sessionToken: $sessionCookie);
+
+					Debugbar::debug($user);
 
 					// Log::debug('User => ', $user->toArray()); // @debug
 
