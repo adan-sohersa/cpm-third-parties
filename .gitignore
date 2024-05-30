@@ -7,6 +7,8 @@
 /storage/*.key
 /vendor
 .env
+.env.development
+.env.staging
 .env.backup
 .env.production
 .phpunit.result.cache

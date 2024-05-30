@@ -5,6 +5,13 @@
 			"src": "/api/index.php",
 			"use": "vercel-php@0.5.4"
 		},
+    {
+      "src": "resources/js",
+      "use": "@vercel/build",
+      "config": {
+        "nvm": "20.*"
+      }
+    },
 		{
 			"src": "/public/**",
 			"use": "@vercel/static"
