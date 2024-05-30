@@ -8,9 +8,7 @@
     {
       "src": "resources/js",
       "use": "@vercel/build",
-      "config": {
-        "nvm": "20.*"
-      }
+      "cmd": "npm run build"
     },
 		{
 			"src": "/public/**",
