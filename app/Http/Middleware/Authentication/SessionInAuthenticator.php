@@ -18,7 +18,7 @@ class SessionInAuthenticator
 	public function handle(Request $request, Closure $next): Response
 	{
 		if (!Auth::guard('authenticator')->check()) {
-			// return $this->redirectToAuthenticator(redirectionBack: $request->fullUrl());
+			return $this->redirectToAuthenticator(redirectionBack: $request->fullUrl());
 		}
 
 		return $next($request);
