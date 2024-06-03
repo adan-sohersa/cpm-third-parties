@@ -2,6 +2,8 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Authorization, User } from "@/types";
 import { Anchor, Card } from "@adan-sohersa/dummy-design-system";
 
+import { usePage } from "@inertiajs/react";
+
 interface AllAuthorizationsPageProps {
 	authorizations: Authorization[],
 	type: string,
@@ -14,13 +16,15 @@ const modules = [
 	{
 		icon: 'https://bim-takeoff-landing.web.app/logos/calculator.ico',
 		name: 'TakeOff',
-		baseUrl: 'http://takeoff.sohersabim.test:4200/autodesk/viewer'
+		subdomainWtDoth: 'takeoff.'
 	}
 ]
 
 export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps) {
 
 	const { type, id, authorizations, apsAuthorizationUrl, ...rest } = props;
+
+	const { ecosystem } = usePage().props;
 
 	return (<Authenticated {...rest}>
 		<>
@@ -45,7 +49,7 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 									modules.map(module =>
 										<Anchor
 											className="capitalize"
-											href={`${module.baseUrl}?authorization=${authorization.id}`}
+											href={`${module.subdomainWtDoth + (ecosystem as any).domain}?authorization=${authorization.id}`}
 											target="_blank"
 											key={module.name}
 										>
