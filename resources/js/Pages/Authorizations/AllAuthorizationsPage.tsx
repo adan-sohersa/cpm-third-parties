@@ -16,7 +16,7 @@ const modules = [
 	{
 		icon: 'https://bim-takeoff-landing.web.app/logos/calculator.ico',
 		name: 'TakeOff',
-		subdomainWtDoth: 'takeoff.'
+		redirectionTemplate: 'http://takeoff.{domain}/autodesk/viewer?authorization={authorizationId}'
 	}
 ]
 
@@ -46,10 +46,15 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 							<span className="grid grid-cols-5 gap-1">
 								{
-									modules.map(module =>
-										<Anchor
+									modules.map(module => {
+
+										const redirectionUrl = module.redirectionTemplate
+											.replace('{authorizationId}', authorization.id)
+											.replace('{domain}', (ecosystem as any).domain);
+
+										return (<Anchor
 											className="capitalize"
-											href={`http://${module.subdomainWtDoth + (ecosystem as any).domain}?authorization=${authorization.id}`}
+											href={redirectionUrl}
 											target="_blank"
 											key={module.name}
 										>
@@ -60,7 +65,8 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 												/>
 												{module.name}
 											</span>
-										</Anchor>
+										</Anchor>)
+									}
 									)
 								}
 							</span>
