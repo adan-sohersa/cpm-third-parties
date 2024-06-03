@@ -49,7 +49,7 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 									modules.map(module =>
 										<Anchor
 											className="capitalize"
-											href={`${module.subdomainWtDoth + (ecosystem as any).domain}?authorization=${authorization.id}`}
+											href={`http://${module.subdomainWtDoth + (ecosystem as any).domain}?authorization=${authorization.id}`}
 											target="_blank"
 											key={module.name}
 										>
