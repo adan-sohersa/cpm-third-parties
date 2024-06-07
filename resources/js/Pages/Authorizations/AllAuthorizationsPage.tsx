@@ -27,8 +27,8 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 	return (<Authenticated {...rest}>
 		<>
 			<Head>
-				<title>Resources</title>
-				<meta name="description" content="Manage the resources of your account." />
+				<title>Authorizations</title>
+				<meta name="description" content="Grant access to third party resources." />
 			</Head>
 
 			<h1>Autorizations Page</h1>
