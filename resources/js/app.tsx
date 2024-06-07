@@ -6,7 +6,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { DSProvider } from '@adan-sohersa/dummy-design-system';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Nimbus Sphere';
 
 createInertiaApp({
 	title: (title) => `${title} - ${appName}`,
