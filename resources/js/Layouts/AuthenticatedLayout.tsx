@@ -1,10 +1,13 @@
 import { useState, PropsWithChildren, ReactNode } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+// import NavLink from '@/Components/NavLink';
+// import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
+import { Button, ButtonRadius } from '@adan-sohersa/dummy-design-system';
+import { authActions } from '@/src/auth/application/auth.actions';
+
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -15,10 +18,11 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
-                            <div className="shrink-0 flex items-center">
+                            <div className="shrink-0 flex items-center gap-2">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                                 </Link>
+																<h1>{header}</h1>
                             </div>
 
                             {/* <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -55,12 +59,18 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                         </span>
                                     </Dropdown.Trigger>
 
-                                    {/* <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content> */}
+                                    <Dropdown.Content>
+																			{authActions.map((action) => {
+																				const { children, ...rest } = action;
+																				return (<Button
+																					className='w-full'
+																					radius={ButtonRadius.none}
+																					{...rest}>
+																							{children}
+																					</Button>
+																				)
+																			})}
+                                    </Dropdown.Content>
                                 </Dropdown>
                             </div>
                         </div>
@@ -105,22 +115,26 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                             </div>
                             <div className="font-medium text-sm text-gray-500">{user.email}</div>
                         </div>
-{/* 
+
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+														{authActions.map((action) => {
+															const { children, ...rest } = action;
+															return (<Button
+																className='w-full'
+																radius={ButtonRadius.none}
+																{...rest}>
+																		{children}
+																</Button>
+															)
+														})}
+                            {/* <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                 Log Out
-                            </ResponsiveNavLink>
-                        </div> */}
+                            </ResponsiveNavLink> */}
+                        </div>
                     </div>
                 </div>
             </nav>
-
-            {header && (
-                <header className="bg-white dark:bg-gray-800 shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
-                </header>
-            )}
 
             <main>{children}</main>
         </div>

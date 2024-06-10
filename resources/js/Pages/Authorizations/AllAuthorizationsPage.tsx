@@ -2,7 +2,7 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Authorization, User } from "@/types";
 import { Anchor, Card } from "@adan-sohersa/dummy-design-system";
 
-import { usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 
 interface AllAuthorizationsPageProps {
 	authorizations: Authorization[],
@@ -24,11 +24,12 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 	const { type, id, authorizations, apsAuthorizationUrl, ...rest } = props;
 
-	const { ecosystem } = usePage().props;
-
-	return (<Authenticated {...rest}>
+	return (<Authenticated header={'Autorizations'} {...rest}>
 		<>
-			<h1>Autorizations Page</h1>
+			<Head>
+				<title>Authorizations</title>
+				<meta name="description" content="Grant access to third party resources." />
+			</Head>
 
 			<section className="grid grid-cols-4 gap-4">
 
@@ -50,7 +51,7 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 										const redirectionUrl = module.redirectionTemplate
 											.replace('{authorizationId}', authorization.id)
-											.replace('{domain}', (ecosystem as any).domain);
+											.replace('{domain}', import.meta.env.VITE_ECOSYSTEM_DOMAIN);
 
 										return (<Anchor
 											className="capitalize"
