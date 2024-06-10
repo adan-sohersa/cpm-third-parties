@@ -24,65 +24,96 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 	const { type, id, authorizations, apsAuthorizationUrl, ...rest } = props;
 
-	return (<Authenticated header={'Autorizations'} {...rest}>
-		<>
+	const groupedAuthorizations = Object.groupBy(authorizations, authorization => authorization.provider);
+
+	// console.log(groupedAuthorizations); // @debug
+
+	const providerAuthorizationUrl: (provider: string) => string = (provider: string) => {
+		switch (provider) {
+			case 'ACC':
+				return apsAuthorizationUrl;
+			default:
+				return apsAuthorizationUrl;
+		}
+	}
+
+	return (<Authenticated header={'Authorizations'} {...rest}>
+		<main className="lg:px-[calc(50%-610px)]">
 			<Head>
 				<title>Authorizations</title>
 				<meta name="description" content="Grant access to third party resources." />
 			</Head>
 
-			<section className="grid grid-cols-4 gap-4">
+			<section className="grid gri-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
 
-				{authorizations.map(authorization => (
-					<Card key={authorization.id}>
-						<>
-							<img
-								className="w-1/4 rounded-full mx-auto"
-								src={authorization.user_picture}
-								alt={`Picture of ${authorization.username_at_provider} at ${authorization.provider}`}
-							/>
-							<p className="font-semibold text-large text-center">{authorization.username_at_provider}</p>
-							<p className="font-base text-base text-center">{authorization.provider}</p>
-							<p className="font-light text-small text-center">{authorization.scopes}</p>
+				{
+					// Getting the providers from the grouped authorizations
+					Object.keys(groupedAuthorizations).map(provider => {
+						// Getting the providerAuthorizations for the provider
+						const providerAuthorizations = groupedAuthorizations[provider] as Authorization[];
 
-							<span className="grid grid-cols-5 gap-1">
+						// Building an providerAuthorizations card for the provider
+						return (<Card key={provider} className="">
+
+							<div className="flex items-center justify-between">
+								<h2 className="text-2xl font-semibold my-2">{provider}</h2>
+								<Anchor href={providerAuthorizationUrl(provider)} target="_blank">New Authorization</Anchor>
+							</div>
+
+							<div className="w-full">
+
 								{
-									modules.map(module => {
+									providerAuthorizations.map(authorization => (
+										<article key={authorization.id} className="last-of-type:border-b-0 border-b border-solid">
 
-										const redirectionUrl = module.redirectionTemplate
-											.replace('{authorizationId}', authorization.id)
-											.replace('{domain}', import.meta.env.VITE_ECOSYSTEM_DOMAIN);
+											<div className="w-full flex gap-2">
 
-										return (<Anchor
-											className="capitalize"
-											href={redirectionUrl}
-											target="_blank"
-											key={module.name}
-										>
-											<span className="flex items-center gap-1.5">
-												<img
-													className="w-5 h-5 rounded-full"
-													src={module.icon}
-												/>
-												{module.name}
-											</span>
-										</Anchor>)
-									}
-									)
+												<img className="h-14 w-14 rounded-full object-cover" src={authorization.user_picture} alt={`Picture of ${authorization.username_at_provider} in ${authorization.provider}`} />
+
+												<p>
+													<span className="font-base text-large">{authorization.username_at_provider}</span>
+													<span className="font-light text-small">{authorization.scopes}</span>
+												</p>
+
+											</div>
+
+											<div className="grid grid-cols-5 gap-1 py-2">
+												{
+													modules.map(module => {
+
+														const redirectionUrl = module.redirectionTemplate
+															.replace('{authorizationId}', authorization.id)
+															.replace('{domain}', import.meta.env.VITE_ECOSYSTEM_DOMAIN);
+
+														return (<Anchor
+															className="capitalize"
+															href={redirectionUrl}
+															target="_blank"
+															key={module.name}
+														>
+															<span className="flex items-center gap-1.5">
+																<img
+																	className="w-5 h-5 rounded-full"
+																	src={module.icon}
+																/>
+																{module.name}
+															</span>
+														</Anchor>)
+													})
+												}
+											</div>
+
+
+										</article>
+									))
 								}
-							</span>
-						</>
-					</Card>
-				))}
 
-				<Card>
-					<div className="flex flex-col justify-center items-center">
-						<Anchor className="text-center text-sm" href={apsAuthorizationUrl}>New Autodesk Authorization</Anchor>
-					</div>
-				</Card>
+							</div>
+						</Card>)
+					})
+				}
 
 			</section>
-
-		</>
-	</Authenticated>)
+		</main>
+	</Authenticated >)
 }
