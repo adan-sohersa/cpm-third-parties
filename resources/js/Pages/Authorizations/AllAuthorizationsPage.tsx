@@ -24,14 +24,12 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 	const { type, id, authorizations, apsAuthorizationUrl, ...rest } = props;
 
-	return (<Authenticated {...rest}>
+	return (<Authenticated header={'Autorizations'} {...rest}>
 		<>
 			<Head>
 				<title>Authorizations</title>
 				<meta name="description" content="Grant access to third party resources." />
 			</Head>
-
-			<h1>Autorizations Page</h1>
 
 			<section className="grid grid-cols-4 gap-4">
 
