@@ -9,7 +9,7 @@ interface AllAuthorizationsPageProps {
 	type: string,
 	id: string,
 	user: User,
-	apsAuthorizationUrl: string
+	providersWithAuthorizationURL: { [key: string]: string }
 }
 
 const modules = [
@@ -22,20 +22,13 @@ const modules = [
 
 export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps) {
 
-	const { type, id, authorizations, apsAuthorizationUrl, ...rest } = props;
+	const { type, id, authorizations, providersWithAuthorizationURL, ...rest } = props;
 
 	const groupedAuthorizations = Object.groupBy(authorizations, authorization => authorization.provider);
 
-	// console.log(groupedAuthorizations); // @debug
+	// console.log(providersWithAuthorizationURL); // @debug
 
-	const providerAuthorizationUrl: (provider: string) => string = (provider: string) => {
-		switch (provider) {
-			case 'ACC':
-				return apsAuthorizationUrl;
-			default:
-				return apsAuthorizationUrl;
-		}
-	}
+	// console.log(groupedAuthorizations); // @debug
 
 	return (<Authenticated header={'Authorizations'} {...rest}>
 		<main className="lg:px-[calc(50%-610px)]">
@@ -48,20 +41,34 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 				{
 					// Getting the providers from the grouped authorizations
-					Object.keys(groupedAuthorizations).map(provider => {
+					Object.keys(providersWithAuthorizationURL).map(provider => {
 						// Getting the providerAuthorizations for the provider
-						const providerAuthorizations = groupedAuthorizations[provider] as Authorization[];
+						const providerAuthorizations = groupedAuthorizations[provider];
+						// Getting the authorization url for the provider
+						const providerAuthorizationUrl = providersWithAuthorizationURL[provider];
+
+						if (typeof providerAuthorizations === 'undefined') {
+							// Building an providerAuthorizations card for the provider
+							return (<Card key={provider} className="min-h-80">
+								<div className="flex items-center justify-between border-b border-neutral-300 dark:border-neutral-700 border-solid py-2">
+									<h2 className="text-2xl font-semibold">{provider}</h2>
+									<Anchor href={providerAuthorizationUrl} target="_blank">New Authorization</Anchor>
+								</div>
+								<div className="w-full h-full flex items-center justify-center">
+									<p className="text-center">No authorizations for this provider yet.</p>
+								</div>
+							</Card>)
+						}
 
 						// Building an providerAuthorizations card for the provider
-						return (<Card key={provider} className="">
+						return (<Card key={provider} className="min-h-80">
 
-							<div className="flex items-center justify-between">
-								<h2 className="text-2xl font-semibold my-2">{provider}</h2>
-								<Anchor href={providerAuthorizationUrl(provider)} target="_blank">New Authorization</Anchor>
+							<div className="flex items-center justify-between border-b border-neutral-300 dark:border-neutral-700 border-solid py-2">
+								<h2 className="text-2xl font-semibold">{provider}</h2>
+								<Anchor href={providerAuthorizationUrl} target="_blank">New Authorization</Anchor>
 							</div>
 
-							<div className="w-full">
-
+							<div className="w-full pt-4">
 								{
 									providerAuthorizations.map(authorization => (
 										<article key={authorization.id} className="last-of-type:border-b-0 border-b border-solid">
@@ -107,7 +114,6 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 										</article>
 									))
 								}
-
 							</div>
 						</Card>)
 					})
