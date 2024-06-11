@@ -29,24 +29,33 @@ class ApiV1AuthenticationController extends Controller
 		)
 			->get(url: env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SIGNOUT_ROUTE'));
 
-		Debugbar::info(
-			[
-				'response' => $response,
-				'response' => $response->json()
-			]
-		);
-
-		// @todo handle the response
-		if ($response->failed()) {
 			return response()->json([
-				'data' => 'Error while logging out',
-				'status' => 'error'
-			], 500);
-		}
+				'response' => $response->json(),
+				'body' => $response->body(),
+				'headers' => $response->headers(),
+				'status' => $response->status(),
+				'cookies' => $response->cookies()->toArray()
+			]);
 
-		return response()->json([
-			'data' => 'Logged out successfully',
-			'status' => 'success'
-		]);
+		// Debugbar::info(
+
+		// 	[
+		// 		'response' => $response,
+		// 		'response' => $response->json()
+		// 	]
+		// );
+
+		// // @todo handle the response
+		// if ($response->failed()) {
+		// 	return response()->json([
+		// 		'data' => 'Error while logging out',
+		// 		'status' => 'error'
+		// 	], 500);
+		// }
+
+		// return response()->json([
+		// 	'data' => 'Logged out successfully',
+		// 	'status' => 'success'
+		// ]);
 	}
 }
