@@ -9,10 +9,6 @@ const signOut = async () => {
 		method: 'GET'
 	});
 
-	console.log(response); // @debug
-
-	return;
-
 	if (response.ok) {
 		location.href = import.meta.env.VITE_AUTHENTICATOR_SIGNIN_URL ?? '/';
 	}
