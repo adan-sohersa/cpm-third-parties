@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Authentication;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -16,6 +17,8 @@ class ApiV1AuthenticationController extends Controller
 		// Getting the session cookie from the request
 		$sessionCookie = $request->cookie(key: $sessionCookieName);
 
+		Debugbar::info(['sessionCookie' => $sessionCookie]);
+
 		// Calling the authenticator app to delete the current session
 		$response = Http::withCookies(
 			cookies: [
@@ -25,6 +28,13 @@ class ApiV1AuthenticationController extends Controller
 			domain: '.' . env('MAIN_DOMAIN')
 		)
 			->get(url: env('AUTHENTICATOR_APP_URL') . env('AUTHENTICATOR_APP_SIGNOUT_ROUTE'));
+
+		Debugbar::info(
+			[
+				'response' => $response,
+				'response' => $response->json()
+			]
+		);
 
 		// @todo handle the response
 		if ($response->failed()) {
