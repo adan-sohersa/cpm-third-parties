@@ -16,7 +16,7 @@ const modules = [
 	{
 		icon: 'https://bim-takeoff-landing.web.app/logos/calculator.ico',
 		name: 'TakeOff',
-		redirectionTemplate: 'http://takeoff.{domain}/autodesk/viewer?authorization={authorizationId}'
+		redirectionTemplate: 'http://takeoff.{domain}/autodesk/app/viewer?authorization={authorizationId}'
 	}
 ]
 
