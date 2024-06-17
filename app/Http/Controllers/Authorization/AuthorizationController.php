@@ -30,13 +30,17 @@ class AuthorizationController extends Controller
 			->where('authorizable_id', $authorizableId)
 			->get();
 
+		$providersWithAuthorizationURL = [
+			'ACC' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
+		];
+
 		// RESPONSE
 		return Inertia::render('Authorizations/AllAuthorizationsPage', [
 			'authorizations' => $authorizations,
 			'type' => $authorizableCase->value,
 			'authorizable' => $authorizableId,
 			'user' => Auth::guard(name: 'authenticator')->user(),
-			'apsAuthorizationUrl' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
+			'providersWithAuthorizationURL' => $providersWithAuthorizationURL
 		]);
 	}
 
