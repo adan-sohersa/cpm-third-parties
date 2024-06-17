@@ -18,13 +18,13 @@ class SessionInAuthenticator
 	public function handle(Request $request, Closure $next): Response
 	{
 		if (!Auth::guard('authenticator')->check()) {
-			return $this->redirectToAuthenticator(redirectionBack: $request->fullUrl());
+			return SessionInAuthenticator::redirectToAuthenticator(redirectionBack: $request->fullUrl());
 		}
 
 		return $next($request);
 	}
 
-	private function redirectToAuthenticator(string $redirectionBack)
+	public static function redirectToAuthenticator(string $redirectionBack)
 	{
 		$redirectionCookieName = env('AUTHENTICATOR_APP_COOKIE_FOR_REDIRECTION');
 
