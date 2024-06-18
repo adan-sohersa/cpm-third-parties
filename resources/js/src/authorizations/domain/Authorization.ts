@@ -1,6 +1,6 @@
-import { EloquentModel } from "./eloquent-model"
+import { RepositoryModel } from "@/types"
 
-export interface Authorization extends EloquentModel {
+interface Authorization extends RepositoryModel {
 
 	id: string
 	provider: string
@@ -9,4 +9,7 @@ export interface Authorization extends EloquentModel {
 	pictureAtProvider?: string
 	usernameAtProvider?: string
 	active: boolean
+
 }
+
+export { type Authorization }
