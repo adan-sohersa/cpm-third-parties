@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,7 +37,7 @@ class Authorization extends Model
 		'authorizable_class',
 		'authorizable_id'
 	];
-	
+
 	const HIDDEN_KEYS = [
 		'refresh_token',
 		'expires_at',
@@ -59,5 +61,20 @@ class Authorization extends Model
 	public function resources(): HasMany
 	{
 		return $this->hasMany(related: Resource::class);
+	}
+
+	/**
+	 * Determines if the token is active at the moment of the request.
+	 * 
+	 * @return bool
+	 */
+	protected function isTokenActive(): Attribute
+	{
+		return Attribute::make(
+			get: function () {
+				$expiresAt = Carbon::createFromTimestamp($this->expires_at);
+				return Carbon::now()->isBefore($expiresAt);
+			},
+		);
 	}
 }

@@ -124,12 +124,17 @@ export default function AllAuthorizationsPage(props: AllAuthorizationsPageProps)
 
 											<div className="w-full flex gap-2">
 
-												<img className="h-14 w-14 rounded-full object-cover" src={authorization.user_picture} alt={`Picture of ${authorization.username_at_provider} in ${authorization.provider}`} />
+												<img className="h-14 w-14 rounded-full object-cover" src={authorization.pictureAtProvider} alt={`Picture of ${authorization.usernameAtProvider} in ${authorization.provider}`} />
 
-												<p>
-													<span className="font-base text-large">{authorization.username_at_provider}</span>
-													<span className="font-light text-small">{authorization.scopes}</span>
-												</p>
+												<div>
+													<p className="font-base text-large">{authorization.usernameAtProvider}</p>
+													<p className="font-light text-small">{authorization.scopes}</p>
+													<p className="font-light text-small flex gap-1">Status:
+														<span className={`text-${authorization.active ? 'success' : 'danger'}`}>
+															{authorization.active ? 'Active' : 'Inactive'}
+														</span>
+													</p>
+												</div>
 
 											</div>
 

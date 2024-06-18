@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Authorization;
 use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authorization\AllAuthorizationsRequest;
+use App\Http\Resources\AuthorizationResource;
 use App\Models\Authorization;
 use App\Source\AutodeskPlatformServices\ApsAuthentication;
 use Illuminate\Http\Request;
@@ -34,9 +35,14 @@ class AuthorizationController extends Controller
 			'ACC' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
 		];
 
+		// disabling the wrapping of the resource collection just for this request
+		AuthorizationResource::withoutWrapping();
+
 		// RESPONSE
 		return Inertia::render('Authorizations/AllAuthorizationsPage', [
-			'authorizations' => $authorizations,
+			// Returning the authorizations through the AuthorizationResource collection in order to
+			// transform the attributes to the format expected by the frontend
+			'authorizations' => AuthorizationResource::collection($authorizations),
 			'type' => $authorizableCase->value,
 			'authorizable' => $authorizableId,
 			'user' => Auth::guard(name: 'authenticator')->user(),
