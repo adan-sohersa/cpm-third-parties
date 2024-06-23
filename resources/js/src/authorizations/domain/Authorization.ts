@@ -1,7 +1,6 @@
 import { RepositoryModel } from "@/types"
 
 interface Authorization extends RepositoryModel {
-
 	id: string
 	provider: string
 	token: string
@@ -9,7 +8,6 @@ interface Authorization extends RepositoryModel {
 	pictureAtProvider?: string
 	usernameAtProvider?: string
 	active: boolean
-
 }
 
 export { type Authorization }
