@@ -20,10 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
 
-/**
- * @todo Protect the route with the authentication middleware.
- */
-Route::apiResource(name: 'authorizations', controller: ApiV1AuthorizationController::class);
+Route::name('api.')
+	->middleware(['authenticator.session'])
+	->group(function () {
+		Route::apiResource(name: 'authorizations', controller: ApiV1AuthorizationController::class);
+	});
 
 Route::name('api.auth.')
 	->middleware(['authenticator.session'])
