@@ -10,10 +10,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
+use App\Enums\Authorization\ThirdPartyProviders;
+use App\Source\Authorizations\Domain\IAuthorization;
+use App\Source\Authorizations\Domain\ITokenRefresher;
+use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
+
 /**
  * @todo Implement a dictionary of query params use along the the app in order to map the authorizable_class and the authorizable_id attributes.
  */
-class Authorization extends Model
+class Authorization extends Model implements IAuthorization
 {
 	use HasUuids;
 	use HasFactory;
@@ -63,6 +68,25 @@ class Authorization extends Model
 		return $this->hasMany(related: Resource::class);
 	}
 
+	public function getProvider(): ThirdPartyProviders
+	{
+		return ThirdPartyProviders::from($this->provider);
+	}
+
+	public function determineTokenRefresher(IAuthorization $authorization): ITokenRefresher
+	{
+		try {
+			switch ($authorization->getProvider()) {
+				case ThirdPartyProviders::acc:
+					return new AutodeskTokenRefresher();
+				default:
+					return null;
+			}
+		} catch (\Exception $e) {
+			return null;
+		}
+	}
+
 	/**
 	 * Determines if the token is active at the moment of the request.
 	 * 
@@ -77,4 +101,5 @@ class Authorization extends Model
 			},
 		);
 	}
+
 }

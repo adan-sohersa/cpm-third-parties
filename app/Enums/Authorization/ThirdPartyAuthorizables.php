@@ -21,6 +21,15 @@ enum AuthorizableConnection: string
 	case users = 'authentication_app_db';
 }
 
+enum AuthorizableTable: string
+{
+	use EnumToArray;
+
+	case projects = 'projects';
+
+	case users = 'users';
+}
+
 enum AuthorizableIdentifier: string 
 {
 	use EnumToArray;

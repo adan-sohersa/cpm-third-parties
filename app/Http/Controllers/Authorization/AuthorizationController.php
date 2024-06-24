@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Authorization;
 
 use App\Enums\Authorization\ThirdPartyAuthorizables;
