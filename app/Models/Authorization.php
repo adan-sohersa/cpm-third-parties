@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Authorization extends Model
+use App\Enums\Authorization\ThirdPartyProviders;
+use App\Source\Authorizations\Domain\IAuthorization;
+use App\Source\Authorizations\Domain\ITokenRefresher;
+use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
+
+class Authorization extends Model implements IAuthorization
 {
 	use HasUuids;
 	use HasFactory;
@@ -32,7 +37,7 @@ class Authorization extends Model
 		'authorizable_class',
 		'authorizable_id'
 	];
-	
+
 	const HIDDEN_KEYS = [
 		'refresh_token',
 		'expires_at',
@@ -56,5 +61,25 @@ class Authorization extends Model
 	public function resources(): HasMany
 	{
 		return $this->hasMany(related: Resource::class);
+	}
+
+	public function getProvider(): ThirdPartyProviders
+	{
+		return ThirdPartyProviders::from($this->provider);
+	}
+
+	public function determineTokenRefresher(IAuthorization $authorization): ITokenRefresher
+
+	{
+		try {
+			switch ($authorization->getProvider()) {
+				case ThirdPartyProviders::acc:
+					return new AutodeskTokenRefresher();
+				default:
+					return null;
+			}
+		} catch (\Exception $e) {
+			return null;
+		}
 	}
 }

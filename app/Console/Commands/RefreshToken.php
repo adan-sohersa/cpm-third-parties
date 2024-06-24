@@ -2,34 +2,27 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\Authorization\ThirdPartyProviders;
-use Illuminate\Console\Command;
-use App\Models\Authorization;
-use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use App\Models\Authorization;
+use Illuminate\Console\Command;
+use App\Source\Authorizations\Application\RefreshIAuthorization;
 
 class RefreshToken extends Command
 {
-	protected $signature = 'app:refresh-token';
-	protected $description = 'Command description';
+	protected $signature = 'app:refresh-tokens';
+	protected $description = 'This command will look for authorizations that have expired and refresh them.';
 
 	public function handle()
 	{
+		// Create a reference to the next hour
 		$nextHour = Carbon::now()->addHour();
-		$authorizations = Authorization::where('expires_at', '<', $nextHour->timestamp)->get();
+		// Get all authorizations that will expire in the next hour
+		$authorizations = Authorization::where('expires_at', '<=', $nextHour->timestamp)->get();
 
+		// Loop through each authorization that will expire in the next hour
 		foreach ($authorizations as $authorization) {
-
-			if($authorization->provider === ThirdPartyProviders::acc) {
-				$this->info('refreshing....');
-				$refresher = new AutodeskTokenRefresher();
-				$refresher->refreshToken($authorization);
-				$this->info('success...');
-				return;
-			}
-
+			// Calling the domain action to refresh the IAuthorization
+			RefreshIAuthorization::refreshToken($authorization);
 		}
 	}
 }
