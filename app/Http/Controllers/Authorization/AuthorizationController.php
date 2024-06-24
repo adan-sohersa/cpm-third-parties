@@ -1,59 +1,51 @@
 <?php
 namespace App\Http\Controllers\Authorization;
 
-use App\Enums\Authorization\AuthorizableConnection;
-use App\Enums\Authorization\AuthorizableIdentifier;
-use App\Enums\Authorization\AuthorizableTable;
 use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Authorization\AllAuthorizationsRequest;
+use App\Http\Resources\AuthorizationResource;
 use App\Models\Authorization;
 use App\Source\AutodeskPlatformServices\ApsAuthentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
 
 class AuthorizationController extends Controller
 {
-
-	/**
-	 * Display a listing of the resource.
-	 */
-	public function index(Request $request)
+	public function index(AllAuthorizationsRequest $request)
 	{
-		// REQUEST VALIDATION
-		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
-			return response()->json(data: $requestErrors, status: 422);
-		};
-	}
+		// Authorizable Case
+		$authorizableCase = isset($request->type)
+			? ThirdPartyAuthorizables::from(value: $request->type)
+			: ThirdPartyAuthorizables::USER;
 
-	public function all(Request $request)
-	{
-
-		// REQUEST VALIDATION
-		if ($requestErrors = AuthorizationController::validateFiltersInRequest(request: $request)) {
-			return response()->json(data: $requestErrors, status: 422);
-		};
-
-		// Resolve type
-		$authorizableCase = ThirdPartyAuthorizables::from(value: $request->type);
+		// Authorizable Id
+		$authorizableId = $authorizableCase === ThirdPartyAuthorizables::USER
+			? Auth::guard(name: 'authenticator')->user()->id
+			: $request->authorizable;
 
 		// QUERY
 		$authorizations = Authorization::where('authorizable_class', $authorizableCase->value)
-			->where('authorizable_id', $request->authorizable)
+			->where('authorizable_id', $authorizableId)
 			->get();
 
-		$apsAuthorizationUrl = ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $request->authorizable);
+		$providersWithAuthorizationURL = [
+			'ACC' => ApsAuthentication::authorizationEndpoint(authorizable_type: $authorizableCase, authorizable_id: $authorizableId)
+		];
+
+		// disabling the wrapping of the resource collection just for this request
+		AuthorizationResource::withoutWrapping();
 
 		// RESPONSE
 		return Inertia::render('Authorizations/AllAuthorizationsPage', [
-			'authorizations' => $authorizations,
+			// Returning the authorizations through the AuthorizationResource collection in order to
+			// transform the attributes to the format expected by the frontend
+			'authorizations' => AuthorizationResource::collection($authorizations),
 			'type' => $authorizableCase->value,
-			'authorizable' => $request->authorizable,
+			'authorizable' => $authorizableId,
 			'user' => Auth::guard(name: 'authenticator')->user(),
-			'apsAuthorizationUrl' => $apsAuthorizationUrl,
+			'providersWithAuthorizationURL' => $providersWithAuthorizationURL
 		]);
 	}
 
@@ -105,46 +97,4 @@ class AuthorizationController extends Controller
 		//
 	}
 
-	/**
-	 * Validates the params of the request in order to determine if it is usefull for the operation of the controller.
-	 *
-	 * @param Illuminate\Http\Request $request The request to validate.
-	 * @return \Illuminate\Support\MessageBag|null The validator errors in case of.
-	 */
-	public static function validateFiltersInRequest(Request $request)
-	{
-		$signaturesValidator = Validator::make(
-			data: $request->all(),
-			rules: [
-				'type' => [
-					Rule::in(ThirdPartyAuthorizables::values()),
-					'required'
-				],
-				'authorizable' => [
-					'uuid',
-					'required'
-				]
-			]
-		);
-
-		if ($signaturesValidator->fails()) {
-			return $signaturesValidator->errors();
-		}
-
-	//	return;
-
-		$existenceValidator = Validator::make(
-			data: $request->all(),
-			rules: [
-				'authorizable' => Rule::exists(
-					table: AuthorizableConnection::fromName(name: $request->type) . "." . AuthorizableTable::fromName(name: $request->type),
-					column: AuthorizableIdentifier::fromName(name: $request->type)
-				)
-			]
-		);
-
-		if ($existenceValidator->fails()) {
-			return $existenceValidator->errors();
-		}
-	}
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,6 +15,9 @@ use App\Source\Authorizations\Domain\IAuthorization;
 use App\Source\Authorizations\Domain\ITokenRefresher;
 use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
 
+/**
+ * @todo Implement a dictionary of query params use along the the app in order to map the authorizable_class and the authorizable_id attributes.
+ */
 class Authorization extends Model implements IAuthorization
 {
 	use HasUuids;
@@ -69,7 +74,6 @@ class Authorization extends Model implements IAuthorization
 	}
 
 	public function determineTokenRefresher(IAuthorization $authorization): ITokenRefresher
-
 	{
 		try {
 			switch ($authorization->getProvider()) {
@@ -82,4 +86,20 @@ class Authorization extends Model implements IAuthorization
 			return null;
 		}
 	}
+
+	/**
+	 * Determines if the token is active at the moment of the request.
+	 * 
+	 * @return bool
+	 */
+	protected function isTokenActive(): Attribute
+	{
+		return Attribute::make(
+			get: function () {
+				$expiresAt = Carbon::createFromTimestamp($this->expires_at);
+				return Carbon::now()->isBefore($expiresAt);
+			},
+		);
+	}
+
 }

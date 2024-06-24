@@ -45,8 +45,10 @@ class AutodeskAuthorizationController extends Controller
 		// Verification fields
 		$fieldsToVerify = array_filter(
 			$authorizationArray,
-			fn ($key) => in_array(needle: $key, haystack: Authorization::UNIQUE_KEYS)
+			fn ($key) => in_array(needle: $key, haystack: Authorization::UNIQUE_KEYS),
+			ARRAY_FILTER_USE_KEY
 		);
+
 		// Persisted instance
 		Authorization::updateOrCreate(
 			$fieldsToVerify,
