@@ -8,6 +8,7 @@ use App\Http\Requests\Authorization\AllAuthorizationsRequest;
 use App\Http\Resources\AuthorizationCollection;
 use App\Http\Resources\AuthorizationResource;
 use App\Models\Authorization;
+use App\Source\Authorizations\Application\RefreshIAuthorization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,7 +59,14 @@ class ApiV1AuthorizationController extends Controller
 	 */
 	public function update(Request $request, Authorization $authorization)
 	{
-		//
+		try {
+			$authorization = RefreshIAuthorization::refreshToken($authorization);
+			return new AuthorizationResource($authorization);
+		} catch (\Throwable $th) {
+			return response()->json([
+				'error' => $th->getMessage()
+			], 500);
+		}
 	}
 
 	/**
