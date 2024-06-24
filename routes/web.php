@@ -5,9 +5,6 @@ use App\Http\Controllers\Authorization\AutodeskAuthorizationController;
 // use App\Http\Controllers\ProfileController;
 // use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Support\Facades\Http;
-
 // use Inertia\Inertia;
 
 /*
@@ -31,8 +28,6 @@ Route::name('authorizations.')
 		Route::get(uri: '/providers/autodesk/callback', action: [AutodeskAuthorizationController::class, 'index'])
 			->name(name: 'aps.callback');
 	});
-
-
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
