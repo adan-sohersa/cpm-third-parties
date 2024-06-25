@@ -102,6 +102,15 @@ return [
 					'password' => env('PROJECTS_DB_PASSWORD'),
 				],
 
+				'authentication_app_db' => [
+					'driver' => env('AUTHENTICATION_DB_CONNECTION'),
+					'host' => env('AUTHENTICATION_DB_HOST'),
+					'port' => env('AUTHENTICATION_DB_PORT'),
+					'database' => env('AUTHENTICATION_DB_DATABASE'),
+					'username' => env('AUTHENTICATION_DB_USERNAME'),
+					'password' => env('AUTHENTICATION_DB_PASSWORD'),
+				],
+
     ],
 
     /*
