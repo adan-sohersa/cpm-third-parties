@@ -7,7 +7,7 @@ use App\Models\Authorization;
 use Illuminate\Console\Command;
 use App\Source\Authorizations\Application\RefreshIAuthorization;
 
-class RefreshTokenCommand extends Command
+class RefreshTokensCommand extends Command
 {
 	protected $signature = 'authorizations:refresh-tokens';
 	protected $description = 'This command will look for authorizations that have expired and refresh them.';
