@@ -21,7 +21,7 @@ class AuthorizationController extends Controller
 			: ThirdPartyAuthorizables::USER;
 
 		// Authorizable Id
-		$authorizableId = $authorizableCase === ThirdPartyAuthorizables::USER
+		$authorizableId = $authorizableCase === ThirdPartyAuthorizables::USER && !isset($request->authorizable)
 			? Auth::guard(name: 'authenticator')->user()->id
 			: $request->authorizable;
 
