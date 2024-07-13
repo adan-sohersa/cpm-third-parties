@@ -17,6 +17,8 @@ use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
 
 /**
  * @todo Implement a dictionary of query params use along the the app in order to map the authorizable_class and the authorizable_id attributes.
+ * 
+ * @property \Illuminate\Support\Collection<int, \App\Models\ViewerState> $viewerStates The viewer states associated with the authorization.
  */
 class Authorization extends Model implements IAuthorization
 {
@@ -57,7 +59,6 @@ class Authorization extends Model implements IAuthorization
 		'authorizable_class',
 		'authorizable_id'
 	];
-
 	/**
 	 * Get all of the resources for the Authorization
 	 *
@@ -71,6 +72,16 @@ class Authorization extends Model implements IAuthorization
 	public function getProvider(): ThirdPartyProviders
 	{
 		return ThirdPartyProviders::from($this->provider);
+	}
+
+	/**
+	 * Get all of the viewer states for the Authorization
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function viewerStates(): HasMany
+	{
+		return $this->hasMany(related: ViewerState::class);
 	}
 
 	public function determineTokenRefresher(IAuthorization $authorization): ITokenRefresher
@@ -101,5 +112,4 @@ class Authorization extends Model implements IAuthorization
 			},
 		);
 	}
-
 }
