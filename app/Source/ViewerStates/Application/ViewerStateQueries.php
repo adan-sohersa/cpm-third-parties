@@ -2,6 +2,7 @@
 
 namespace App\Source\ViewerStates\Application;
 
+use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Models\ViewerState;
 use App\Source\Authorizations\Application\AuthorizationQueries;
 
@@ -25,6 +26,31 @@ class ViewerStateQueries
 	}
 
 	/**
+	 * Get all the viewer states related to the corresponding authorizable entity.
+	 *
+	 * @param ThirdPartyAuthorizables $authorizableClass The king of the authorizable.
+	 * @param string $authorizableId The id of the authorizable.
+	 * @return \Illuminate\Support\Collection<int, \App\Models\ViewerState>
+	 */
+	public static function statesFromAuthorizable(ThirdPartyAuthorizables $authorizableClass, string $authorizableId): \Illuminate\Support\Collection
+	{
+		// Getting the authorizations of the authorizable.
+		$authorizations = AuthorizationQueries::authorizationsFromAuthorizable(authorizableClass: $authorizableClass->value, authorizableId: $authorizableId);
+
+		// Loading the viewer states of the authorizations.
+		$authorizations->load('viewerStates');
+
+		// Getting the viewer states by:
+		return $authorizations
+			// Abstracting the viewer states of the authorizations.
+			->pluck(value: 'viewerStates')
+			// Flattening the collection.
+			->collapse()
+			// Removing the duplicated ones.
+			->unique(key: 'id');
+	}
+
+	/**
 	 * Get all the viewer states which shares the same name and authorization with the given one.
 	 *
 	 * @param ViewerState $viewerState The viewer state to use as reference.
@@ -45,20 +71,14 @@ class ViewerStateQueries
 	 */
 	public static function statesWithTheSameNameFromAuthorizable(ViewerState $viewerState): \Illuminate\Support\Collection
 	{
-		// Getting all the authorizations with the same authorizable as the authorization of the given viewer state.
-		$authorizations = AuthorizationQueries::authorizationsFromAuthorizable($viewerState->authorization);
+		// Getting the viewer states from the given authorizable.
+		$viewerStates = ViewerStateQueries::statesFromAuthorizable(
+			authorizableClass: $viewerState->authorization->authorizable_class,
+			authorizableId: $viewerState->authorization->authorizable_id
+		);
 
-		// Loading the viewer states of the authorizations.
-		$authorizations->load('viewerStates');
-
-		// Getting the viewer states by:
-		return $authorizations
-			// Abstracting the viewer states of the authorizations.
-			->pluck(value: 'viewerStates')
-			// Flattening the collection.
-			->collapse()
-			// Filtering the viewer states with he same name
-			->where(key: 'name', operator: '=', value: $viewerState->name);
+		// Returning just the viewer states with the same name.
+		return $viewerStates->where(key: 'name', operator: '=', value: $viewerState->name);
 	}
 
 	/**
@@ -83,5 +103,4 @@ class ViewerStateQueries
 		// Determining if the name is available.
 		return $previousStates->count() == 0;
 	}
-
 }

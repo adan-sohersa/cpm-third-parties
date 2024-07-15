@@ -13,15 +13,23 @@ class AuthorizationQueries
 {
 
 	/**
-	 * Get all the authroizations that shares authorizable with the given one.
+	 * Get all the authorizations which shares authorizable with the given one.
 	 *
-	 * @param Authorization $authorization
+	 * @param string $authorizableClass The authorizable class to use as reference.
+	 * @param string $authorizableId The authorizable id to use as reference.
 	 * @return \Illuminate\Support\Collection<int, Authorization>
 	 */
-	public static function authorizationsFromAuthorizable(Authorization $authorization): \Illuminate\Support\Collection
+	public static function authorizationsFromAuthorizable(string $authorizableClass, string $authorizableId): \Illuminate\Support\Collection
 	{
-		return Authorization::where('authorizable_id', $authorization->authorizable_id)
-			->where('authorizable_class', $authorization->authorizable_class)
+		// Throwing an exception if the references are not set yet.
+		if (!isset($authorizableClass) || !isset($authorizableId))
+		{
+			throw new \Exception('Missing references while getting authorizations from authorizable.');
+		}
+
+		// Returning the result of the query.
+		return Authorization::where('authorizable_id', $authorizableId)
+			->where('authorizable_class', $authorizableClass)
 			->get();
 	}
 }
