@@ -16,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
 	 * @var array<class-string, class-string>
 	 */
 	protected $policies = [
-		//
+		\App\Models\ViewerState::class => \App\Policies\Api\v1\ViewerStatePolicy::class,
 	];
 
 	/**
