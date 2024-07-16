@@ -20,10 +20,12 @@ class ViewerStateResource extends JsonResource
 			'name' => $this->name,
 			'version' => $this->version,
 			'authorizationId' => $this->authorization_id,
-			'state' => json_decode(json: $this->state, associative: true),
+			'state' => $this->when(
+				condition: !$request->resumed,
+				value: json_decode(json: $this->state, associative: true)
+			),
 			'authorization' => new AuthorizationResource(resource: $this->whenLoaded('authorization')),
 			'created_at' => $this->created_at,
-			'updated_at' => $this->updated_at,
 		];
 	}
 }
