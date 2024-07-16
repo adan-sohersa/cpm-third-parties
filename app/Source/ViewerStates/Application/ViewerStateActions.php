@@ -22,7 +22,7 @@ class ViewerStateActions
 	 */
 	public static function create(
 		string $name,
-		array $state,
+		string $state,
 		Authorization $authorization,
 	): ViewerState
 	{
