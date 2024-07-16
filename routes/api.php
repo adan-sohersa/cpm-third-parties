@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Authentication\ApiV1AuthenticationController;
 use App\Http\Controllers\Api\v1\Authorization\ApiV1AuthorizationController;
+use App\Http\Controllers\Api\v1\ViewerState\ApiV1ViewerStateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::name('api.')
 	->middleware(['authenticator.session'])
 	->group(function () {
 		Route::apiResource(name: 'authorizations', controller: ApiV1AuthorizationController::class);
+		Route::apiResource(name: 'viewer-states', controller: ApiV1ViewerStateController::class);
 	});
 
 Route::name('api.auth.')
