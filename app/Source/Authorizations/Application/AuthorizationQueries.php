@@ -2,6 +2,7 @@
 
 namespace App\Source\Authorizations\Application;
 
+use App\Enums\Authorization\ThirdPartyAuthorizables;
 use App\Models\Authorization;
 
 /**
@@ -22,8 +23,7 @@ class AuthorizationQueries
 	public static function authorizationsFromAuthorizable(string $authorizableClass, string $authorizableId): \Illuminate\Support\Collection
 	{
 		// Throwing an exception if the references are not set yet.
-		if (!isset($authorizableClass) || !isset($authorizableId))
-		{
+		if (!isset($authorizableClass) || !isset($authorizableId)) {
 			throw new \Exception('Missing references while getting authorizations from authorizable.');
 		}
 
@@ -31,5 +31,42 @@ class AuthorizationQueries
 		return Authorization::where('authorizable_id', $authorizableId)
 			->where('authorizable_class', $authorizableClass)
 			->get();
+	}
+
+	/**
+	 * Determines if the authorization is attached to the given user.
+	 *
+	 * @param \App\Models\Authorization $authorization The authorization to check.
+	 * @param \App\Models\User $user The user to check.
+	 * @return bool
+	 */
+	public static function belongsToUser(\App\Models\Authorization $authorization, \App\Models\User $user): bool
+	{
+		// Throwing an exception if the authorization does not belong to the user.
+		if ($authorization->authorizable_class !== ThirdPartyAuthorizables::USER->value) {
+			return false;
+		}
+
+		return $authorization->authorizable_id === $user->id;
+	}
+
+	/**
+	 * Determines if the authorization could be implemented by the given user.
+	 *
+	 * @param \App\Models\Authorization $authorization The authorization to check.
+	 * @param \App\Models\User $user The user to check.
+	 * @return bool
+	 */
+	public static function couldBeImplementedByUser(\App\Models\Authorization $authorization, \App\Models\User $user, bool $reasonInException = false): bool
+	{
+		// Determining if the authorization belongs to the user.
+		$belongsToUser = AuthorizationQueries::belongsToUser($authorization, $user);
+
+		// Throwing the corresponding exception if required.
+		if (!$belongsToUser && $reasonInException) {
+			throw new \Exception('The authorization could not be implemented by the user.');
+		}
+
+		return true;
 	}
 }
