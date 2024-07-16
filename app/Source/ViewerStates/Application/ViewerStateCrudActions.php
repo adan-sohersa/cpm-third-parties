@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Source\ViewerStates\Application;
+
 use App\Models\ViewerState;
 
 /**
@@ -88,8 +89,11 @@ class ViewerStateCrudActions
 	 */
 	public static function deleteItem(ViewerState $viewerState): ViewerState
 	{
-		$viewerState->delete();
-		return $viewerState;
+		$wasDeleted = $viewerState->delete();
+
+		return $wasDeleted
+			? $viewerState
+			: null;
 	}
 
 	/**
