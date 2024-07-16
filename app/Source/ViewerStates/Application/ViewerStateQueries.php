@@ -73,7 +73,7 @@ class ViewerStateQueries
 	{
 		// Getting the viewer states from the given authorizable.
 		$viewerStates = ViewerStateQueries::statesFromAuthorizable(
-			authorizableClass: $viewerState->authorization->authorizable_class,
+			authorizableClass: ThirdPartyAuthorizables::tryFrom($viewerState->authorization->authorizable_class),
 			authorizableId: $viewerState->authorization->authorizable_id
 		);
 
