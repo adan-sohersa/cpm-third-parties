@@ -79,9 +79,9 @@ class ViewerStateActions
 	 *
 	 * @param ViewerState $viewerState The viewer state to delete.
 	 * @param boolean $issueEvent If true, the corresponding events from the Eloquent ORM will be issued.
-	 * @return void
+	 * @return \App\Models\ViewerState The deleted viewer state.
 	 */
-	public static function deleteVersion(ViewerState $viewerState, bool $issueEvent = false): void
+	public static function deleteVersion(ViewerState $viewerState, bool $issueEvent = false): \App\Models\ViewerState
 	{
 		// Handling the deletion when the event is required.
 		if ($issueEvent) {
@@ -95,7 +95,7 @@ class ViewerStateActions
 			}
 
 			// Breaking the function.
-			return;
+			return $viewerState;
 		}
 
 		// Deleting the version when he event is not required.
@@ -109,16 +109,16 @@ class ViewerStateActions
 		}
 
 		// Breaking the function.
-		return;
+		return $viewerState;
 	}
 
 	/**
 	 * Deletes all the version of the given state.
 	 *
 	 * @param ViewerState $viewerState The viewer state to use as reference.
-	 * @return integer The amount of deleted states.
+	 * @return \Illuminate\Support\Collection<int, \App\Models\ViewerState> The collection of deleted states.
 	 */
-	public static function deleteAllVersions(ViewerState $viewerState, bool $issueEvent = false): int
+	public static function deleteAllVersions(ViewerState $viewerState, bool $issueEvent = false): \Illuminate\Support\Collection
 	{
 		// Getting the amount of viewer states with the same name and the same authorization.
 		$statesToDelete = ViewerStateQueries::statesWithTheSameNameFromAuthorizable($viewerState);
@@ -132,8 +132,8 @@ class ViewerStateActions
 				ViewerStateCrudActions::deleteItem($stateToDelete);
 			}
 
-			// Returning the amount of deleted states.
-			return $statesToDelete->count();
+			// Returning the deleted states.
+			return $statesToDelete;
 		}
 
 		// Deleting all the versions of the viewer state.
@@ -144,8 +144,8 @@ class ViewerStateActions
 			throw new \Exception('Some versions of the state were not deleted.');
 		}
 
-		// Returning the amount of deleted states.
-		return $amountOfDeletedStates;
+		// Returning the deleted states.
+		return $statesToDelete;
 	}
 
 }
