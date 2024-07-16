@@ -31,7 +31,7 @@ class ViewerStateCrudActions
 	 * @param ViewerState $viewerState The viewer state to refresh.
 	 * @return ViewerState The refreshed viewer state.
 	 */
-	public static function refresItem(ViewerState $viewerState): ViewerState
+	public static function refreshItem(ViewerState $viewerState): ViewerState
 	{
 		return $viewerState->refresh();
 	}
