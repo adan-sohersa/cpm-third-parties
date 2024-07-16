@@ -69,4 +69,24 @@ class AuthorizationQueries
 
 		return true;
 	}
+
+	/**
+	 * Determines if the authorization could be accessed by the given user.
+	 *
+	 * @param \App\Models\Authorization $authorization The authorization to check.
+	 * @param \App\Models\User $user The user to check.
+	 * @return bool
+	 */
+	public static function couldBeAccessedByUser(\App\Models\Authorization $authorization, \App\Models\User $user, bool $reasonInException = false): bool
+	{
+		// Determining if the authorization belongs to the user.
+		$belongsToUser = AuthorizationQueries::belongsToUser($authorization, $user);
+
+		// Throwing the corresponding exception if required.
+		if (!$belongsToUser && $reasonInException) {
+			throw new \Exception('The authorization could not be accessed by the user.');
+		}
+
+		return true;
+	}
 }
