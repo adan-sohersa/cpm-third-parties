@@ -75,6 +75,44 @@ class ViewerStateActions
 	}
 
 	/**
+	 * Delete the given viewer state.
+	 *
+	 * @param ViewerState $viewerState The viewer state to delete.
+	 * @param boolean $issueEvent If true, the corresponding events from the Eloquent ORM will be issued.
+	 * @return void
+	 */
+	public static function deleteVersion(ViewerState $viewerState, bool $issueEvent = false): void
+	{
+		// Handling the deletion when the event is required.
+		if ($issueEvent) {
+
+			// Deleting the viewer state.
+			$deletedItem = ViewerStateCrudActions::deleteItem($viewerState);
+
+			// Throwing an exception if no viewer state was returned by the method.
+			if (!isset($deletedItem)) {
+				throw new \Exception('The viewer state was not deleted.');
+			}
+
+			// Breaking the function.
+			return;
+		}
+
+		// Deleting the version when he event is not required.
+		$amountOfDeletedStates = ViewerStateCrudActions::deleteCollection(
+			viewerStates: collect([$viewerState]),
+		);
+
+		// Throwing an exception if the amount of deleted states is less than 1.
+		if ($amountOfDeletedStates < 1) {
+			throw new \Exception('The viewer state was not deleted.');
+		}
+
+		// Breaking the function.
+		return;
+	}
+
+	/**
 	 * Deletes all the version of the given state.
 	 *
 	 * @param ViewerState $viewerState The viewer state to use as reference.
