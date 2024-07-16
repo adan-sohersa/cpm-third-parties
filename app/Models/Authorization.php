@@ -18,6 +18,17 @@ use App\Source\Authorizations\Infraestructure\AutodeskTokenRefresher;
 /**
  * @todo Implement a dictionary of query params use along the the app in order to map the authorizable_class and the authorizable_id attributes.
  * 
+ * @property string $provider The provider of the authorization.
+ * @property string $access_token The token that allows access to resources in the provider.
+ * @property string $refresh_token The token that allows refreshing the access token.
+ * @property string $scopes The scopes that the token has.
+ * @property string $expires_at The date when the token expires.
+ * @property string $username_at_provider The username of the user at the provider.
+ * @property string $user_picture The picture of the user at the provider.
+ * @property string $authorizable_class The kind of authorizable the authorization is for.
+ * @property string $authorizable_id The primary key of the authorizable the authorization is for.
+ * @property bool $isTokenActive Indicates if the token is active at the moment of the request.
+ * @property \Illuminate\Support\Collection<int, \App\Models\Resource> $resources The resources associated with the authorization.
  * @property \Illuminate\Support\Collection<int, \App\Models\ViewerState> $viewerStates The viewer states associated with the authorization.
  */
 class Authorization extends Model implements IAuthorization
