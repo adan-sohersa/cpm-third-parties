@@ -49,9 +49,9 @@ class ViewerStateActions
 	 * @param ViewerState $viewerState The viewer state to use as reference.
 	 * @param string $newName The new name to set in the states.
 	 * @param boolean $skipAvailabilityCheck If true, the method will not check if the new name is available.
-	 * @return int The amount of updated states.
+	 * @return \Illuminate\Support\Collection<int, \App\Models\ViewerState> A fresh collection with the renamed states.
 	 */
-	public static function renameStatesFromAuthorizable(ViewerState $viewerState, string $newName, bool $skipAvailabilityCheck = false): int
+	public static function renameStatesFromAuthorizable(ViewerState $viewerState, string $newName, bool $skipAvailabilityCheck = false): \Illuminate\Support\Collection
 	{
 		// Checking if the new name is not taken yet.
 		if (!$skipAvailabilityCheck && !ViewerStateQueries::isTheNameAvailable($viewerState, $newName)) {
@@ -70,8 +70,8 @@ class ViewerStateActions
 			throw new \Exception('Some versions of the state were not updated.');
 		}
 
-		// Returning the amount of updated states.
-		return $amountOfUpdatedStates;
+		// Returning a fresh collection with the renamed states.
+		return ViewerStateCrudActions::refreshCollection($statesToRename);
 	}
 
 	/**
