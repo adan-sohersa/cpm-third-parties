@@ -20,6 +20,7 @@ return new class extends Migration
 				->noActionOnUpdate()
 				->nullOnDelete();
 			$table->json('state');
+			$table->boolean('is_public')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 		});
