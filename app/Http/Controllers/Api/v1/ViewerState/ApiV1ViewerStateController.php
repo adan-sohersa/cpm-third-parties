@@ -104,7 +104,7 @@ class ApiV1ViewerStateController extends Controller
 		$this->authorizeForUser(user: $user, ability: 'update', arguments: [$viewerState]);
 
 		// Updating the accesibility of the viewer state if the 'is_public' parameter is provided.
-		if ($request->validated('is_public') !== null && $request->validated('is_public') !== $viewerState->is_public) {
+		if ($request->validated('is_public') !== null && $viewerState->is_public !== $request->validated('is_public')) {
 			$viewerState = ViewerStateActions::publish(
 				viewerState: $viewerState,
 				publish: $request->validated('is_public')
@@ -112,12 +112,11 @@ class ApiV1ViewerStateController extends Controller
 		}
 
 		// Renaming all the versions of the viewer state if the 'name' parameter is provided.
-		if ($request->validated('name')) {
+		if ($request->validated('name') !== null && $viewerState->name !== $request->validated('name')) {
 			ViewerStateActions::renameStatesFromAuthorizable(
 				viewerState: $viewerState,
 				newName: $request->validated('name'),
-				// Skipping the availability check because the name is already validated.
-				skipAvailabilityCheck: true
+				skipAvailabilityCheck: true // Skipping the availability check because the name is already validated.
 			);
 		}
 

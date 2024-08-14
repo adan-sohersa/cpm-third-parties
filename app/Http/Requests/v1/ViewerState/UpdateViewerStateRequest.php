@@ -46,6 +46,11 @@ class UpdateViewerStateRequest extends FormRequest
 	 */
 	protected function prepareForValidation()
 	{
+		// Including the camelcased viewer state.
+		$this->merge([
+			'viewerState' => $this->viewer_state
+		]);
+
 		if ($this->has(key: 'isPublic')) {
 			$this->merge([
 				'is_public' => $this->toBoolean($this->isPublic),

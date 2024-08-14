@@ -90,6 +90,11 @@ class ViewerStateQueries
 	 */
 	public static function isTheNameAvailable(ViewerState $viewerState, string $name): bool
 	{
+		// Returning true if the given name is the same as the current one.
+		if ($viewerState->name === $name) {
+			return true;
+		}
+
 		// Replicating the given instance; with the new name, though.
 		$temporalState = $viewerState
 			->replicate()
