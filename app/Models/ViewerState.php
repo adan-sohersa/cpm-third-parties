@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Source\SharedResources\Domain\TSharedResource;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,8 @@ class ViewerState extends Model
 
 	use HasUuids;
 	use SoftDeletes;
+
+	use TSharedResource;
 
 	protected $fillable = [
 		'name',
