@@ -13,6 +13,7 @@ use App\Http\Resources\Api\v1\ViewerStateResource;
 use App\Models\ViewerState;
 use App\Source\Authorizations\Application\AuthorizationCrudActions;
 use App\Source\ViewerStates\Application\ViewerStateActions;
+use App\Source\ViewerStates\Application\ViewerStateCrudActions;
 use App\Source\ViewerStates\Application\ViewerStateQueries;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,16 +103,28 @@ class ApiV1ViewerStateController extends Controller
 		// Authorizing the request
 		$this->authorizeForUser(user: $user, ability: 'update', arguments: [$viewerState]);
 
-		// Renaming all the versions of the viewer state.
-		$renamed = ViewerStateActions::renameStatesFromAuthorizable(
-			viewerState: $viewerState,
-			newName: $request->validated('name'),
-			// Skipping the availability check because the name is already validated.
-			skipAvailabilityCheck: true
-		);
+		// Updating the accesibility of the viewer state if the 'is_public' parameter is provided.
+		if ($request->validated('is_public') !== null && $viewerState->is_public !== $request->validated('is_public')) {
+			$viewerState = ViewerStateActions::publish(
+				viewerState: $viewerState,
+				publish: $request->validated('is_public')
+			);
+		}
 
+		// Renaming all the versions of the viewer state if the 'name' parameter is provided.
+		if ($request->validated('name') !== null && $viewerState->name !== $request->validated('name')) {
+			ViewerStateActions::renameStatesFromAuthorizable(
+				viewerState: $viewerState,
+				newName: $request->validated('name'),
+				skipAvailabilityCheck: true // Skipping the availability check because the name is already validated.
+			);
+		}
+
+		// Refreshing the given viewer state.
+		$refreshedInstance = ViewerStateCrudActions::refreshItem($viewerState);
+		
 		// Returning the viewer state
-		return new ViewerStateCollection(resource: $renamed);
+		return new ViewerStateResource(resource: $refreshedInstance);
 	}
 
 	/**

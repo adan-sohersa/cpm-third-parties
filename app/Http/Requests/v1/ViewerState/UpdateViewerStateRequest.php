@@ -26,7 +26,6 @@ class UpdateViewerStateRequest extends FormRequest
 		return [
 			'name' => [
 				'bail',
-				'required',
 				'string',
 				'between:3,255',
 				function (string $attribute, mixed $value, Closure $fail) {
@@ -36,6 +35,37 @@ class UpdateViewerStateRequest extends FormRequest
 					}
 				},
 			],
+			'is_public' => 'boolean'
 		];
+	}
+
+	/**
+	 * Prepare inputs for validation.
+	 *
+	 * @return void
+	 */
+	protected function prepareForValidation()
+	{
+		// Including the camelcased viewer state.
+		$this->merge([
+			'viewerState' => $this->viewer_state
+		]);
+
+		if ($this->has(key: 'isPublic')) {
+			$this->merge([
+				'is_public' => $this->toBoolean($this->isPublic),
+			]);
+		}
+	}
+
+	/**
+	 * Convert to boolean
+	 *
+	 * @param $booleable
+	 * @return boolean
+	 */
+	private function toBoolean($booleable)
+	{
+		return filter_var($booleable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 	}
 }

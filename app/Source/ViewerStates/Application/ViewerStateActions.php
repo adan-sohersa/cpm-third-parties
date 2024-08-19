@@ -44,6 +44,22 @@ class ViewerStateActions
 	}
 
 	/**
+	 * Makes public or private the given viewer state.
+	 *
+	 * @param ViewerState $viewerState The viewer state to make public.
+	 * @param boolean $publish If true, the viewer state will be made public, otherwise it will be made private.
+	 * @return ViewerState The reference to the given viewer state.
+	 */
+	public static function publish(ViewerState $viewerState, bool $publish = true): ViewerState
+	{
+		// Setting the is_public property to true.
+		$viewerState->is_public = $publish;
+
+		// Saving the viewer state.
+		return ViewerStateCrudActions::save($viewerState);
+	}
+
+	/**
 	 * Sets the new name in all the states which shares its name and its authorizable entity with the given one.
 	 *
 	 * @param ViewerState $viewerState The viewer state to use as reference.

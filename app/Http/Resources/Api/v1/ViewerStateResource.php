@@ -20,6 +20,7 @@ class ViewerStateResource extends JsonResource
 			'name' => $this->name,
 			'version' => $this->version,
 			'authorizationId' => $this->authorization_id,
+			'isPublic' => $this->is_public,
 			'state' => $this->when(
 				condition: !$request->resumed,
 				value: json_decode(json: $this->state, associative: true)

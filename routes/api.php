@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Authentication\ApiV1AuthenticationController;
 use App\Http\Controllers\Api\v1\Authorization\ApiV1AuthorizationController;
+use App\Http\Controllers\Api\v1\PublicResources\ApiV1PublicResourcesController;
 use App\Http\Controllers\Api\v1\ViewerState\ApiV1ViewerStateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
+
+Route::name('api.public.')
+	->group(function () {
+		Route::get(uri: 'public-resources', action: [ApiV1PublicResourcesController::class, 'show']);
+	});
 
 Route::name('api.')
 	->middleware(['authenticator.session'])
