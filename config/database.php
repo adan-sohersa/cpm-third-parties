@@ -93,6 +93,24 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+				'projects_app_db' => [
+					'driver' => env('PROJECTS_DB_CONNECTION'),
+					'host' => env('PROJECTS_DB_HOST'),
+					'port' => env('PROJECTS_DB_PORT'),
+					'database' => env('PROJECTS_DB_DATABASE'),
+					'username' => env('PROJECTS_DB_USERNAME'),
+					'password' => env('PROJECTS_DB_PASSWORD'),
+				],
+
+				'authentication_app_db' => [
+					'driver' => env('AUTHENTICATION_DB_CONNECTION'),
+					'host' => env('AUTHENTICATION_DB_HOST'),
+					'port' => env('AUTHENTICATION_DB_PORT'),
+					'database' => env('AUTHENTICATION_DB_DATABASE'),
+					'username' => env('AUTHENTICATION_DB_USERNAME'),
+					'password' => env('AUTHENTICATION_DB_PASSWORD'),
+				],
+
     ],
 
     /*

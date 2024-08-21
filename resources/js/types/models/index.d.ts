@@ -1,2 +1,2 @@
-export * from './eloquent-model'
-export * from './authorization'
+export * from '../../src/authorizations/domain'
+export * from '../../src/general/domain'
