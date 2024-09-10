@@ -25,6 +25,7 @@ class ApsToken extends Model implements IExternalAuthorization
 		$authorization = new Authorization($this->toArray());
 		$authorization['provider'] = ThirdPartyProviders::acc->value;
 		$authorization['expires_at'] = Carbon::now()->timestamp + $this->expires_in;
+		$authorization['scopes'] = env('APS_SCOPES');
 
 		$userInfoResponse = ApsAuthentication::getUserByToken($authorization->access_token);
 		$userInfoJson = $userInfoResponse->json();

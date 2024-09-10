@@ -20,6 +20,7 @@ class AuthorizationResource extends JsonResource
 			'token' => $this->access_token,
 			'scopes' => $this->scopes,
 			'expiresAt' => $this->expires_at,
+			'active' =>  $this->isTokenActive,
 			'usernameAtProvider' => $this->username_at_provider,
 			'pictureAtProvider' => $this->user_picture,
 			'authorizableId' => $this->authorizable_id,

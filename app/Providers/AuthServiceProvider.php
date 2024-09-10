@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Source\Authentication\Application\ValidateSession;
+use App\Source\SharedResources\Domain\SharedResource;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -16,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
 	 * @var array<class-string, class-string>
 	 */
 	protected $policies = [
-		//
+		\App\Models\ViewerState::class => \App\Policies\Api\v1\ViewerStatePolicy::class,
+		\App\Source\SharedResources\Domain\SharedResource::class => \App\Policies\Api\v1\SharedResourcePolicy::class,
 	];
 
 	/**
